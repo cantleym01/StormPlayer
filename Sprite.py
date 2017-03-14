@@ -33,11 +33,12 @@ class Sprite(pygame.sprite.Sprite):
             for hit in coll:
                 if hit.identity == 0: #a thing was hit
                     if speed > 0:  #was moving right
-                        self.rect.right = hit.rect.left
-                        print("collide right")
-                        return True
+                        while pygame.sprite.collide_rect(self, hit):
+                            self.rect.centerx -= 1
+                        return 1 #a barrier to not go past
                     if speed < 0:  #was moving left
-                        self.rect.left = hit.rect.right
-                        print("collide left")
-                        return True
-        return False
+                        while pygame.sprite.collide_rect(self, hit):
+                            self.rect.centerx += 1
+                        return 1 #a barrier to not go past
+        return 0
+        #this will return a number. So far, only 0 and 1 are accounted for (0 means nothing to worry about, 1 is player hitting a barrier)

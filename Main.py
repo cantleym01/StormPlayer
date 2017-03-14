@@ -92,12 +92,10 @@ def main():
                         if right:
                             speed += 5
 
-                        #no speed if there was a collision
-                        if sprite.collide(hitList, speed) == True:
-                            speed = 0
-
-                        print (speed)
                         sprite.rect.centerx += speed
+
+                        #check for collisions
+                        collision = sprite.collide(hitList, speed)
 
 
                 # position adjustments
