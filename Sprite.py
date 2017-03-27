@@ -2,12 +2,12 @@ import pygame
 
 class Sprite(pygame.sprite.Sprite):
     destructable = False
-    identity = 0 #0 = misc, 1 = player
+    identity = 0 #0 = barrier of some kind, 1 = player
 
     def __init__(self, sprite, startx, starty, width, height, identity = 0):
         super().__init__()
 
-        self.identity = identity
+        self.identity = identity # 0 = barrier, 1 = player
 
         self.width = width
         self.height = height
@@ -26,19 +26,3 @@ class Sprite(pygame.sprite.Sprite):
 
         #scale hitbox to new size
         self.rect = self.rect.clip(pygame.Rect(startx, starty, width, height))
-
-    def collide(self, coll, speed):
-        #player clause
-        if self.identity == 1:
-            for hit in coll:
-                if hit.identity == 0: #a thing was hit
-                    if speed > 0:  #was moving right
-                        while pygame.sprite.collide_rect(self, hit):
-                            self.rect.centerx -= 1
-                        return 1 #a barrier to not go past
-                    if speed < 0:  #was moving left
-                        while pygame.sprite.collide_rect(self, hit):
-                            self.rect.centerx += 1
-                        return 1 #a barrier to not go past
-        return 0
-        #this will return a number. So far, only 0 and 1 are accounted for (0 means nothing to worry about, 1 is player hitting a barrier)

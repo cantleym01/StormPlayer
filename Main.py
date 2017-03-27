@@ -27,11 +27,11 @@ def main():
 
     x = y = 0
     level = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
         "P                                P",
         "P                                P",
         "P           PPPPPPPPPP           P",
-        "P                                P",
+        "P                          P     P",
         "P                                P",
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
 
@@ -42,10 +42,6 @@ def main():
                 p = Platform(x, y)
                 platforms.append(p)
                 Sprites.add(p)
-            if col == "E":
-                e = ExitBlock(x, y)
-                platforms.append(e)
-                Sprites.add(e)
             x += 32
         y += 32
         x = 0
@@ -94,9 +90,15 @@ def main():
 
                         sprite.rect.centerx += speed
 
-                        #check for collisions
-                        collision = sprite.collide(hitList, speed)
-
+                        #collision handling for player
+                        for hit in hitList:
+                            if hit.identity == 0:  # a barrier was hit
+                                if speed > 0:  # was moving right
+                                    while pygame.sprite.collide_rect(player, hit): # correction
+                                        player.rect.centerx -= 1
+                                if speed < 0:  # was moving left
+                                    while pygame.sprite.collide_rect(player, hit): # correction
+                                        player.rect.centerx += 1
 
                 # position adjustments
                 while (sprite.rect.bottom > ACTUAL_HEIGHT):
@@ -125,6 +127,8 @@ def main():
         for sprite in Sprites:
             screen.blit(sprite.image, camera.apply(sprite))
 
+        screen.blit(player.image, camera.apply(player))
+
         pygame.display.flip()
         timer.tick(60)
 
@@ -147,11 +151,6 @@ class Platform(Sprite):
 
     def update(self):
         pass
-
-class ExitBlock(Platform):
-    def __init__(self, x, y):
-        Platform.__init__(self, x, y)
-        self.image.fill(pygame.Color("#0033FF"))
 
 if __name__ == "__main__":
     main()
